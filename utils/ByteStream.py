@@ -7,9 +7,9 @@ class ByteStream:
 	def __init__(self, buffer=b"", endian="little", stringLengthSize=2):
 		self.buffer = bytearray(buffer)
 		self.endian = endian
-		self.offset = 0
-		
 		self.stringLengthSize = stringLengthSize
+		
+		self.offset = 0
 	
 	@property
 	def endianSign(self):
@@ -28,6 +28,8 @@ class ByteStream:
 		return length
 	
 	def readBytes(self, size):
+		size = max(size, 0)
+		
 		if self.offset + size > len(self.buffer):
 			raise EOFError("Not enough bytes to read")
 		
@@ -35,6 +37,9 @@ class ByteStream:
 		self.offset += size
 		
 		return result
+
+	def readSizedBytes(self):
+		return self.readBytes(self.readUInt32())
 	
 	def readInt(self, size):
 		return int.from_bytes(self.readBytes(size), self.endian, signed=True)
@@ -88,7 +93,10 @@ class ByteStream:
 		return self.readRawString(self.readUInt(self.stringLengthSize))
 	
 	def readCString(self):
-		endOffset = self.buffer.index(0, self.offset)
+		try:
+			endOffset = self.buffer.index(0, self.offset)
+		except ValueError:
+			raise ValueError("End terminator not found") from None
 		result = self.readRawString(endOffset - self.offset)
 		self.offset += 1
 
@@ -130,6 +138,10 @@ class ByteStream:
 		self.buffer[self.offset:self.offset + size] = value
 		self.offset += size
 		return value
+
+	def writeSizedBytes(self, value):
+		self.writeUInt32(len(value))
+		return self.writeBytes(value)
 	
 	def writeInt(self, value, size):
 		self.writeBytes(value.to_bytes(size, self.endian, signed=True))
