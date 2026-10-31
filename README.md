@@ -22,5 +22,5 @@ You can also use presets below, but only if your game, version and architecture 
 Then you just need to replace 3 variables at the end of script to your fileName and offsets, and simply run the program
 
 ## Why?
-You might wonder why would this be useful, when there is already an automated alternative((Supercell ArxanUnprotector)[https://github.com/Mimi8298/Supercell.ArxanUnprotector])?
+You might wonder why would this be useful, when there is already an automated alternative([Supercell ArxanUnprotector](https://github.com/Mimi8298/Supercell.ArxanUnprotector))?
 Well, the answer is... it doesnt always work. This is especially noticable in older versions (like Brawl Stars v14 and below), probably due to fact that it uses thumb, although im not entirely sure
